@@ -15,5 +15,18 @@
 
 HTTP是一个基于TCP/IP协议簇来传递数据
 
+## 请求报文
+
+请求方法：POST、GET、POST、PUT、DELETE、PATCH、HEAD、OPTION、TRACE ->8种
+
+请求URL：请求对应的URL地址，它和报文头的Host属性组成完整的请求URL
+
+HTTP协议及版本
+
+报文头
+
+报文体
+## 响应报文
+
 ## TCP/IP协议
 
