@@ -25,23 +25,23 @@ protected:
     //insert new node before v
     void add(DNode<E> *v, const E &e)
     {
-        DNode<E>* u=new DNode<E>;
-        u->elem=e;
-        
+        DNode<E> *u = new DNode<E>;
+        u->elem = e;
+
         //新节点的下一个节点是v
-        u->next=v;
+        u->next = v;
         //新节点的前一个节点是v节点的前一个节点
-        u->prev=v->prev;
+        u->prev = v->prev;
         //v的前一个节点的下一个节点是新节点
-     
-        v->prev->next=u;
+
+        v->prev->next = u;
         //v的前一个节点是u
-        v->prev=u;
+        v->prev = u;
     }
     void remove(DNode<E> *v)
-    {   
-        v->prev->next=v->next;
-        v->next->prev=v->prev;
+    {
+        v->prev->next = v->next;
+        v->next->prev = v->prev;
         delete v;
     }
 
@@ -56,11 +56,45 @@ public:
 
     ~DlinkedList()
     {
-        while (/* condition */)
+        while (!empty())
         {
-            /* code */
+            removeFront();
+        }
+        delete header;
+        delete tailer;
+    }
+
+    void init(const DlinkedList &d)
+    {
+        header = new DNode<E>;
+        tailer = new DNode<E>;
+        header->next = tailer;
+        tailer->prev = header;
+        DNode<E> *p = d.header->next;
+        while (p != d.tailer)
+        {
+            add(tailer, p->elem);
+            p = p->next;
         }
     }
+    DlinkedList(const DlinkedList&d){
+        init(d);
+    }
+    DLinkedList& operator = (const DLinkedList& d)
+        {
+            if(this == &d)
+            {
+                return *this;
+            }
+            while(!empty())
+            {
+                removeFront();
+            }
+            delete header;
+            delete tailer;
+            init(d);
+            return *this;
+        }
 
     DlinkedList(DlinkedList &&d)
     {
@@ -92,20 +126,44 @@ public:
     const E &back() const
     {
         if (empty())
-        { 
+        {
             throw std::logic_error("DLinkedList empty");
         }
         return tailer->prev->elem;
     }
-    void addFront(const E& e){
-        add(header->next,e);
+    void addFront(const E &e)
+    {
+        add(header->next, e);
     }
 
-    void addBack(const E&e){
-        add(tailer,e);
+    void addBack(const E &e)
+    {
+        add(tailer, e);
     }
-    void removeFront(){
-
+    void removeFront()
+    {
+        if (empty())
+        {
+            throw std::logic_error("DLinkedList empty");
+        }
+        remove(header->next);
     }
-    void 
+    void removeBack()
+    {
+        if (empty())
+        {
+            throw std::logic_error("DLinkedList empty");
+        }
+        remove(tailer->prev);
+    }
+    void display() const
+    {
+        DNode<E> *p = header->next;
+        while (p != tailer)
+        {
+            std::cout << p->elem << ",";
+            p = p->next;
+        }
+        std::cout << std::endl;
+    }
 };
