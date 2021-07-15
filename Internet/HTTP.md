@@ -43,7 +43,7 @@ URL一般由三部组成：
 存有该资源的主机IP地址(有时也包括端口号)③主机资源的具体地址。如目录和文件名等
 
 ## HTTP方法和状态码
-参考: [https://mp.weixin.qq.com/s/xxxS5qG244F6L10Y_ZxyGQ)
+参考: [HTTP方法和状态码](https://mp.weixin.qq.com/s/xxxS5qG244F6L10Y_ZxyGQ)
 
 |  方法   | 说明  |  支持的HTTP协议版本| DIY|
 |  ----  | ----  |----  |----  |
