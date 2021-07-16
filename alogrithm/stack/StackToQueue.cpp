@@ -8,24 +8,24 @@
 
 class Solution{
     private:
-    std::stack<int>stack1;
-    std::stack<int>stack2;
+    std::stack<int>inStack;
+    std::stack<int>outStack;
     public:
     void push(int node){
-      stack1.push(node);
+      inStack.push(node);
     }
 
     int pop(){
       int res;
-      if(stack2.empty()){
-          while (!stack1.empty())
+      if(outStack.empty()){
+          while (!inStack.empty())
           {
-              stack2.push(stack1.top());
-              stack1.pop();
+              outStack.push(inStack.top());
+              inStack.pop();
           }
       }
-      res=stack2.top();
-      stack2.pop();
+      res=outStack.top();
+      outStack.pop();
       return res;
     }
 };
