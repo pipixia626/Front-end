@@ -42,4 +42,15 @@ public:
         inOrder(root->right);
         std::cout << root->val << std::endl;
     }
+    //获取长度
+    int depth(BinaryTreeNode *root){
+        int dep1=0,dep2=0;
+        if(root==nullptr)return;
+        else{
+            dep1=depth(root->left);
+            dep2=depth(root->right);
+            if(dep1>dep2)return dep1+1;
+            else return dep2+1;
+        }
+    }
 };
