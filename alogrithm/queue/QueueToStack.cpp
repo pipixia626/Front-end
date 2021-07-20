@@ -38,9 +38,12 @@ public:
         {
             queue2.pop();
         }
-        else
+        else if(queue2.empty())
         {
             queue1.pop();
+        }
+        else{
+            throw std::logic_error("empty queue");
         }
     }
 

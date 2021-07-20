@@ -6,36 +6,37 @@ class quick_sort
 public:
     std::vector<int> Mysort(std::vector<int> &arr)
     {
-        quickSort(arr,0,arr.size()-1);
+        quickSort(arr, 0, arr.size() - 1);
         return arr;
     }
 
     void quickSort(std::vector<int> &arr, int left, int right)
     {
-        if (left<right)
+        if (left < right)
         {
-          int point=partition(arr,left,right);
-          quickSort(arr,left,point-1);
-          quickSort(arr,point+1,right);
+            int point = partition(arr, left, right);
+            quickSort(arr, left, point - 1);
+            quickSort(arr, point + 1, right);
         }
-        
     }
-    int partition(std::vector<int>&arr,int left,int right){
-        int first=arr[left];
-        while (left<right)
+    int partition(std::vector<int> &arr, int left, int right)
+    {
+        //int first=arr[left];
+        int first = RandomInRange(left, right);
+        while (left < right)
         {
-            while ((left<right)&&arr[right]>=first)
+            while ((left < right) && arr[right] >= first)
             {
                 right--;
             }
-            swap(arr,left,right);
-            while ((left<right)&&arr[left]<=first){
+            swap(arr, left, right);
+            while ((left < right) && arr[left] <= first)
+            {
                 left++;
             }
-            swap(arr,left,right);
+            swap(arr, left, right);
         }
         return left;
-        
     }
     void swap(std::vector<int> &arr, int i, int j)
     {
@@ -52,10 +53,16 @@ public:
         }
         std::cout << std::endl;
     }
+    int RandomInRange(int min, int max)
+    {
+        int random = rand() % (max - min + 1) + min;
+        return random;
+    }
 };
 
-int main(){
-    std::vector<int>datas={3,5,7,4,6,9};
+int main()
+{
+    std::vector<int> datas = {3, 5, 7, 4, 6, 9};
     quick_sort q;
     q.Mysort(datas);
     q.print_cout(datas);
