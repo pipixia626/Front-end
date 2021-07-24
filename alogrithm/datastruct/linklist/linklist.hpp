@@ -3,7 +3,7 @@
 template <typename E>
 class SlinkedList;
 
-template <typename>
+template <typename E>
 class SNode
 {
 private:

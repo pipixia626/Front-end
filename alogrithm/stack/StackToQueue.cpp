@@ -6,7 +6,7 @@
 #include<iostream>
 #include<stack>
 
-class Solution{
+class StackQueue{
     private:
     std::stack<int>inStack;
     std::stack<int>outStack;

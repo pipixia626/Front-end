@@ -25,7 +25,7 @@ long long Finbonacci_dp(unsigned n)
     long long fibNMinusOne = 1;
     long long fibMinusTwo = 0;
     long long fibN = 0;
-    for (unsigned int i = 2; i <= n; ++i)
+    for (unsigned int i = 0; i < n; ++i)
     {
         fibN = fibNMinusOne + fibMinusTwo;
         fibMinusTwo = fibNMinusOne;
@@ -36,4 +36,3 @@ long long Finbonacci_dp(unsigned n)
 
 // 求矩阵的乘方 [1 1]
 //             [1 0]
-
