@@ -36,7 +36,7 @@ TreeNode *GetNext(TreeNode *pNode)
         TreeNode*pParent=pNode->parent;
         
         while(pParent!=nullptr&&pCurrent==pParent->right){
-            //找个这个节点的
+            //一直往上遍历，直到找到一个是它父节点的左子节点的节点
             pCurrent=pParent;
             pParent=pParent->parent;
         }
