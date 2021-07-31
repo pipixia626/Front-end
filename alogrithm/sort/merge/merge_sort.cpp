@@ -4,7 +4,7 @@
 class merge_sort
 {
 public:
-    void print_cout(std::vector<int> arr)
+    void print_cout(const std::vector<int> arr)
     {
         for (int i = 0; i < arr.size(); i++)
         {

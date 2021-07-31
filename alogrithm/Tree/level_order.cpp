@@ -61,4 +61,31 @@ public:
         level(root, 0);
         return res;
     }
+
+    std::vector<std::vector<int>>levelOrder(TreeNode* root){
+        std::vector<std::vector<int>>res;
+        if(root==nullptr)return {};
+        std::queue<TreeNode*>queue;
+        queue.push(root);
+        while (!queue.empty())
+        {
+            int size=queue.size();
+            std::vector<int>temp;
+            while (size--)
+            {
+                TreeNode*node=queue.front();
+                queue.pop();
+                temp.push_back(node->val);
+                if(node->left)queue.push(node->left);
+                if(node->right)queue.push(node->right);
+
+            }
+            if(temp.size()>0)res.push_back(temp);
+
+            
+        }
+        return res;
+        
+    }
 };
+
