@@ -105,6 +105,57 @@ public:
             end_of_storage = new_start + len;
         }
     }
+    void insert(iterator position, size_type n, const T &x)
+    {
+        if (n != 0)
+        {
+            if (size_type(end_of_storage - finish) >= n)
+            {
+                //备用空间大于等于新增元素个数
+                T x_copy = x;
+                //以下计算插入点之后的现有元素个数
+                const size_type elems_after = finish - position;
+                iterator oldfinish = finish;
+                if (elems_after > n)
+                {
+                    //插入点之后的现有元素个数大于新增元素个数
+                    uninitialized_copy(finish - n, finish, finish);     //把start(finish-n)到postion(finish)位置的全部内存单元都拷贝到以new_start(finish)开始的地方
+                    finish += n;                                        //将vector尾端标记后移
+                    copy_backward(position, old_finish - n, oldfinish); //memmove
+                    fill(position, position + n, x_copy);               //从插入点开始填入新值
+                }
+                else
+                {
+                    //插入点之后的现有元素个数小于等于新增元素个数
+                    uninitialized_fill_n(finish, n - elems_after, x_copy);
+                    finish += n - elems_after;
+                    uninitialized_copy(position, old_finish, finish);
+                    finish += elems_after;
+                    fill(position, old_finish, x_copy);
+                }
+            }else{
+                //备用空间小于"新增元素个数”(配置额外的内存)
+                //首先决定新长度，旧长度的两倍/或旧长度+新增元素个数
+                const size_type old_size=size();
+                const size_type len=old_size+max(old_size,n);
+                //以下未配置新的vetor空间
+                iterator new_start=data_allocator::allocate(len);
+                iterator new_finish=new_start;
+                __STL__TRY{
+                    //以下首先将旧vector的插入点之前的元素复制到新空间
+                    new_finish=uninitialized_copy(start,position,new_start);
+                    //再将新增元素（初值为n）填入新空间
+                    new_finish=uninitialized_fill_n(new_finish,n,x);
+                    //以下再将旧vector的插入点之后的元素复制到新空间
+                    new_finish=uninitialized_copy(position,finish,new_finish);
+
+                    //对异常进行处理
+                    //destroy
+                    //data_alloca
+                }
+            }
+        }
+    }
     void pop_back()
     {
         --finish;
@@ -140,7 +191,6 @@ protected:
         return result;
     }
 };
-
 
 template <class T1, class T2>
 inline void construt(T1 *p, const T2 &value)
