@@ -9,6 +9,8 @@ struct TreeNode
     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
+// preorder:[3,9,20,15,7] 5
+// inorder:[9,3,15,20,7] 5
 
 TreeNode *Construct(int *preorder, int *inorder, int length)
 {
@@ -44,7 +46,7 @@ TreeNode *ConstructCore(
     {
         ++rootInorder;
     }
-
+   
     if (rootInorder == endInorder && *rootInorder != rootValue)
     {
         throw ::std::exception("Invalid input.");
