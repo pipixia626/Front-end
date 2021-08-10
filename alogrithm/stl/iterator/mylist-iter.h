@@ -28,4 +28,10 @@ struct ListIter
         ++*this;
         return tmp;
     }
+    bool operator == (const ListIter& i)const{
+        return ptr==i.ptr;
+    }
+    bool operator!=(const ListIter& i)const{
+        return ptr!=i.ptr;
+    }
 };
