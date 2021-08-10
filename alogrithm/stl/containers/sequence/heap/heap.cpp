@@ -30,7 +30,15 @@ int main()
 
     for (int i = 0; i < ivec.size(); ++i)
     {
-        cout << ivec[i] << ' '; //9 7 8 3 5 0 2 3 1 4
+        cout << ivec[i] << ' '; //8 7 4 3 5 0 2 3 1
         cout << endl;
     }
+
+    sort_heap(ivec.begin(),ivec.end());
+      for (int i = 0; i < ivec.size(); ++i)
+    {
+        cout << ivec[i] << ' '; // 0 1 2 3 4 5 6 7 8
+        cout << endl;
+    }
+    //以array为底层的话，因为是无法动态改变大小的，所以不能使用push_heap
 }
