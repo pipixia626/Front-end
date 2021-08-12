@@ -1,123 +1,113 @@
-typedef bool __rb_tree_color_type;
-const __rb_tree_color_type __rb_tree_red = false;  //红色为
-const __rb_tree_color_type __rb_tree_black = true; //红色为
-
-//struct __rb_tree_node_base ->struct __rb_tree_node
-struct __rb_tree_node_base
+// RB-Tree的数据结构
+#include "RBTree_iterator.h"
+template <class Key, class Value, class KeyOfValue, class Compare, class Alloc>
+class rb_tree
 {
-    typedef __rb_tree_color_type color_type;
+protected:
+    typedef void *void_pointer;
     typedef __rb_tree_node_base *base_ptr;
+    typedef __rb_tree_color_type color_type;
+    typedef simple_alloc<rb_tree_node, Alloc> rb_tree_node_allocator;
 
-    color_type color; //
-    base_ptr parent;
-    base_ptr left;
-    base_ptr right;
+public:
+    // 注意，没有定义iterator（定义在后面)
 
-    static base_ptr minimum(base_ptr x)
+    typedef Key key_type;
+    typedef Value Value_type;
+    typedef Value_type *pointer;
+    typedef const Value_type *const_pointer;
+    typedef Value_type &reference;
+    typedef const Value_type &const_reference;
+    typedef __rb_tree_node *link_type;
+    typedef size_t size_type;
+    typedef ptrdiff_t difference_type;
+
+protected:
+    link_type get_node(return __rb_tree_node_allocator::allocate();)
+        link_type put_node(return __rb_tree_node_allocator::dellocate();)
+
+            link_type create_node(const Value_type &x)
     {
-        while (x->left != nullptr)
+        link_type tmp = get_node();
+
+        __STL_TRY
         {
-            x = x->left;
+            constuct(&tmp->value_field, x);
         }
-        return x;
-    }
-    static base_ptr maximum(base_ptr x)
-    {
-        while (x->right != nullptr)
-        {
-            x = x->right;
-        }
-    }
-};
-template <class value>
-struct __rb_tree_node : public __rb_tree_node_base
-{
-    typedef __rb_tree_node<value> *link_type;
-    value value_field; //节点值
-};
-
-//基层迭代器
-struct __rb_tree_base_iterator
-{
-    typedef __rb_tree_node_base::base_ptr base_ptr;
-    //typedef bidirectional_iterator_tag iterator_category;
-    //typedef ptrdiff_t difference_type;
-    base_ptr node; //用来和容器之间产生一个连结关系
-    void increment()
-    {
-        //如果有右子节点
-
-        if (node->right != nullptr)
-        {
-            //往右走
-            node = node->right;
-            //找到最左节点即是解答
-            while (node->left != nullptr)
-            {
-                node = node->left;
-            }
-        }
-        //没有右子节点
-        else
-        {
-            base_ptr y = node->parent; //找到父节点
-            //如果现行节点是一个右子节点
-            while (node == y->right)
-            {
-                //一直上溯，直到不为右子节点为止
-                node = y;
-                y = y->parent;
-            }
-            //若此时的右子节点不等于此时的父节点->父节点即为解答
-            //欲寻找根节点的下一个节点，而恰巧根节点的无右子节点
-            //否则此时的node为解答
-            if (node->right != y)
-            {
-                node = y;
-            }
-        }
-    }
-
-    void decrement()
-    {
-    }
-};
-
-//正规迭代器
-template <class Value, class Ref, class Ptr>
-struct __rb_tree_iterator : public __rb_tree_base_iterator
-{
-    typedef Value value_type;
-    typedef Ref reference;
-    typedef Ptr pointer;
-    typedef __rb_tree_iterator<Value, Value &, Value *> iterator;
-    typedef __rb_tree_iterator<Value, const Value &, const Value *> const_iterator;
-    typedef __rb_tree_iterator<Value, Ref, Ptr> self;
-    typedef __rb_tree_node<Value> *link_type;
-
-    __rb_tree_iterator() {}
-    __rb_tree_iterator(link_type x) { node = x; }
-    __rb_tree_iterator(const iterator &it) { node = it.node; }
-
-    reference operator*() const { retrun link_type(node)->value_field; }
-#ifndef __SGI_STL_NO_ARROW_OPERATOR
-    pointer operator->() const
-    {
-        return &(operator*());
-    }
-#endif /*__SGI_STL_NO_ARROW_OPRATOR*/
-
-    self &operator++()
-    {
-        increment();
-        return *this;
-    }
-    self operator++(int)
-    {
-        self tmp = *this;
-        tmp = decrement();
+        __STL_UNWIND(put_node(tmp);)
         return tmp;
     }
-    //同理decrement
+    link_type clone_node(link_type x)
+    {
+        link_type tmp = create_node(x->value_field);
+        tmp->left - 0;
+        tmp->right = 0;
+        tmp->color = x->color;
+        return tmp;
+    }
+    void destroy_node(link_type p)
+    {
+        destroy(&p->value - field); //析构内容
+        put_node(p);                //释放内存
+    }
+
+protected:
+    //只以三笔数据表现
+    size_type node_count; //追踪记录树的大小(节点数量)
+    link_type header;     //一个小技巧
+    Compare key_compare;  //节点间的键值大小比较准则，应该会是个function object
+
+    //三个函数用来取得header的成员
+    link_type &root() const { return (link_type &)header->parent; }
+    link_type &leftmost() const { return (link_type &)header->left; }
+    link_type &rightmost() const { return (link_type &)header->right; }
+
+    //六个static获取节点x的成员
+    static link_type &left(link_type x) { return (link_type &)x->left; }
+    static link_type &right(link_type x) { return (link_type &)x->right; }
+    static link_type &parent(link_type x) { return (link_type &)x->parent; }
+    static link_type &value(link_type x) { return (link_type &)x->value_field; }
+    static link_type &key(link_type x) { return (link_type &)x->key; }
+    static link_type &color(link_type x) { return (color_type &)x->color; }
+
+    //也是六个static获取节点x的成员，只不过参数变成了base_ptr x
+
     //...
+
+    //求得极大值和极小值
+    static link_type minimum(link_type x) { return __rb_tree_node_base::minimum(x); }
+    static link_type maximum(link_type x) { return __rb_tree_node_base::maximum(x); }
+
+public:
+    typedef __rb_tree_base_iterator<Value_type, reference, pointer> iterator;
+
+private:
+    iterator __insert(base_ptr x, base_ptr y, const Value_type &v);
+    link_type __copy(link_type x, link_type p);
+    void erase(link_type x);
+    void init()
+    {
+        header = get_node();
+        color(header) = __rb_tree_red;
+        root() = 0;
+        leftmost() = header;
+        rightmost() = header;
+    }
+public:
+//构造和析构
+
+public:
+Compare key_compare()const {return key_compare;}
+iterator begin(){return leftmost;}
+iterator end(){return header;}//RB树的终点为header所指处
+bool empty()const {return node_count==0;}
+size_type size()const{return node_count;}
+size_type max_size()const{return size_type(-1);}
+
+
+public:
+   //将x插入到RB-tree(保持节点独一无二)
+   pair<iterator,bool> insert_unique(const Value_type& x);
+   //将x插入到RB-tree(允许节点重复)
+   interator insert_equal(const Value_type& x);
 };
