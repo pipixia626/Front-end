@@ -14,7 +14,7 @@ class Graph
 public:
     std::map<T, std::set<Edge<T>>> adj; //邻接表//
 
-    bool constains(const T &u); //判断顶点U是否在图中
+    bool contains(const T &u); //判断顶点U是否在图中
 
     bool adjacent(const T &u, const T &v); //判断顶点u和v是否相邻
 
@@ -36,7 +36,7 @@ public:
 
     int num_edges(); //求图中边的总数
 
-    int largesr_degree(); //求图中最大的度数
+    int largest_degree(); //求图中最大的度数
 
     int get_weight(const T &u, const T &v); //得到某两个顶点之间边的权重
 
@@ -59,14 +59,14 @@ void Graph<T>::show()
     }
 }
 template <typename T>
-bool Graph<T>::constains(const T &u)
+bool Graph<T>::contains(const T &u)
 {
     return adj.find(u) != adj.end();
 }
 template <typename T>
 bool Graph<T>::adjacent(const T &u, const T &v)
 {
-    if (constains(u) && constains(v) && u != v)
+    if (contains(u) && contains(v) && u != v)
     {
         for (auto edge : adj[u])
             if (edge.vertex == v)
@@ -79,7 +79,7 @@ void Graph<T>::add_vertex(const T &u)
 {
     if (!contains(u))
     {
-        set<Edge<T>> edge_list;
+        std::set<Edge<T>> edge_list;
         adj[u] = edge_list;
     }
 }
@@ -96,7 +96,7 @@ void Graph<T>::add_edge(const T &u, const T &v, int weight)
 template <typename T>
 void Graph<T>::change_weight(const T &u, const T &v, int weight)
 {
-    if (constains(u) && constains(v))
+    if (contains(u) && contains(v))
     {
         if (adj[u].find(Edge<T>(v)) != adj[u].end())
         {
@@ -146,14 +146,14 @@ void Graph<T>::remove_vertex(const T &u)
 template <typename T>
 void Graph<T>::remove_edge(const T &u, const T &v)
 {
-    if (u == v || !constains(u) || !continue(v))
-        return
+    if (u == v || !contains(u) || !contains(v))
+        return;
 
-            if (adj[u].find(Edge<T>(v) != adj[u].end()))
-        {
-            adj[u].erase(Edge<T>(v));
-            adj[v].erase(Edge<T>(u));
-        }
+    if (adj[u].find(Edge<T>(v) != adj[u].end()))
+    {
+        adj[u].erase(Edge<T>(v));
+        adj[v].erase(Edge<T>(u));
+    }
 }
 template <typename T>
 int Graph<T>::degree(const T &u)
@@ -167,4 +167,68 @@ template <typename T>
 int Graph<T>::num_vertices()
 {
     return adj.size();
+}
+template <typename T>
+int Graph<T>::num_edges()
+{
+    int count = 0;
+    std::set<Edge<T>> vertex_set;
+
+    for (auto vertex : adj)
+    {   
+        vertex_set.insert(Edge<T>(vertex.first,0));
+        for (auto edge : vertex.second)
+        {
+            if (vertex_set.find(edge) != vertex_set.end())
+                continue;
+            count++;
+        }
+    }
+    return count;
+}
+template <typename T>
+int Graph<T>::largest_degree()
+{
+    if (num_vertices() == 0)
+        return 0;
+
+    unsigned max_degree = 0;
+    for (auto vertex : adj)
+    {
+        if (vertex.second.size() > max_degree)
+            max_degree = vertex.second.size();
+    }
+    return max_degree;
+}
+template <typename T>
+int Graph<T>::get_weight(const T &u, const T &v)
+{
+    if (contains(u) && contains(v))
+    {
+        for (Edge<T> edge : adj[u])
+            if (edge.vertex == v)
+                return edge.weight;
+    }
+    return -1;
+}
+template <typename T>
+std::vector<T> Graph<T>::get_vertices()
+{
+    std::vector<T> vertices;
+    for (auto vertex : adj)
+    {
+        vertices.push_back(vertex.first);
+    }
+    return vertices;
+}
+template <typename T>
+std::map<T, int> Graph<T>::get_neighbours(const T &u)
+{
+    std::map<T, int> neighbours;
+    if (contains(u))
+    {
+        for (Edge<T> edge : adj[u])
+            neighbours[edge.vertex] = edge.weight;
+    }
+    return neighbours;
 }
