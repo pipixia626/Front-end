@@ -33,6 +33,29 @@ void test01(Graph<char> g)
     std::cout << std::endl;
 }
 
+void test02(Graph<char>g){
+    auto dft = g.depth_first_rec('A');
+    std::cout << "从顶点A进行深度优先遍历（递归）: {";
+    for (auto u : dft) std::cout << u << " ";
+    std::cout << "}" << std::endl;
+
+    std::vector<char> dft_itr = g.depth_first_itr('A');
+    std::cout << "从顶点A进行深度优先遍历（迭代）: {";
+    for (auto u : dft_itr) std::cout << u << " ";
+    std::cout << "}" << std::endl;
+
+    auto bft = g.breadth_first('A');
+    std::cout << "从顶点A进行广度优先遍历: {";
+    for (auto u : bft) std::cout << u << " ";
+    std::cout << "}" << std::endl;
+
+}
+void test03(Graph<char> g) {
+    std::cout << "生成的最小生成树如下：" << std::endl;
+    Graph<char> result = g.prim('A');
+    result.show();
+}
+
 int main()
 {
     Graph<char> g;
@@ -66,6 +89,8 @@ int main()
     g.show();
     std::cout << std::endl;
 
-    test01(g);
+    //test01(g);
+    //test02(g);
+    test03(g);
     return 0;
 }
