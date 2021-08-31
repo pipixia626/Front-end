@@ -23,6 +23,8 @@ public:
     {
         //int first=arr[left];
         int first = RandomInRange(left, right);
+        swap(arr,first,left);
+        first=arr[left];
         while (left < right)
         {
             while ((left < right) && arr[right] >= first)
