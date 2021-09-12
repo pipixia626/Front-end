@@ -5,9 +5,9 @@
 int search(std::vector<int> &nums, int target)
 {
     int pivot, left = 0, right = nums.size() - 1;
-    while (left <= right)
+    while (left < right)
     {
-        pivot = left + (right - left + 1) >> 1;
+        pivot = left + (right - left >> 1);
         if (nums[pivot] == target)
             return pivot;
         else if (nums[pivot] > target)

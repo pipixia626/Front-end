@@ -21,11 +21,13 @@ public:
             return 0;
         int slow = 0, fast = 1;
         while (fast < n)
-        {
+        {   
             if (nums[fast] != nums[slow])
-            {
+            {   
+                //相差大一个数说明有重复
                 if (fast - slow > 1)
-                {
+                {   
+                    //移动fast到slow+1
                     nums[slow + 1] = nums[fast];
                 }
                 slow++;
