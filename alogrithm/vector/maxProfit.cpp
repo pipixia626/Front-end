@@ -8,6 +8,7 @@
 #include<algorithm>
 using namespace std;
 
+//从后面的一个值减去前面这一个
 int maxProfit_voilence(vector<int> &prices)
 {
     int maxMoney = 0;
@@ -21,6 +22,7 @@ int maxProfit_voilence(vector<int> &prices)
     }
     return maxMoney;
 }
+//取得最低值后找出后面的最大值
 int maxProfit_onceScan(vector<int>& prices){
     int maxMoney=0,minPrice=1e9;
     for(auto price:prices){
