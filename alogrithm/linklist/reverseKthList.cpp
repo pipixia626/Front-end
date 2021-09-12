@@ -27,7 +27,14 @@ public:
 		}
 		return prev;
 	}
+    ListNode* reverse_recursion(ListNode*head){
+		if(head==nullptr||head->next==nullptr)return head;
 
+		ListNode* reverse_head=reverse_recursion(head->next);
+		head->next->next=head;//40 和50循环指针
+		head->next=nullptr;//断开循环的两个指针(40的下一个指针)
+		return reverse_head;
+	}
 	void reverKth(ListNode* head,const int left, const int right) {
 		ListNode* phead = new ListNode(-1);
 		phead->next = head;
