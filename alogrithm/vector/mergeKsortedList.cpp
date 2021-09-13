@@ -37,7 +37,7 @@ ListNode *mergeKsortedList(vector<ListNode *> &lists)
     priority_queue<ListNode *, vector<ListNode *>, cmp> min_heap;
     for (auto list : lists)
     {
-        min_heap.emplace(list);
+        min_heap.emplace(list);//emplace不会产生临时对象
     }
 
     ListNode *dummy = new ListNode();
@@ -48,7 +48,7 @@ ListNode *mergeKsortedList(vector<ListNode *> &lists)
         min_heap.pop();
         cur = cur->next;
         if (cur->next)
-            min_heap.push(cur->next);
+            min_heap.push(cur->next);//push会产生临时对象
     }
     return dummy->next;
 }
