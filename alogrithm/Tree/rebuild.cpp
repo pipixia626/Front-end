@@ -1,96 +1,92 @@
-// 根据前序遍历和中序遍历求树
+#include<iostream>
+#include<vector>
+#include<unordered_map>
+using namespace std;
 
-//根据中序遍历和后序遍历求树
 
-#include <iostream>
-#include <unordered_map>
-#include <vector>
 struct TreeNode
 {
-    int val_;
-    TreeNode *left;
-    TreeNode *right;
-    TreeNode() : val_(0), left(nullptr), right(nullptr) {}
-    TreeNode(int val) : val_(val), left(nullptr), right(nullptr) {}
+	int val;
+	TreeNode* left;
+	TreeNode* right;
+	TreeNode():val(0),left(nullptr),right(nullptr){}
+	TreeNode(int _val):val(_val),left(nullptr),right(nullptr){}
 };
-
-class Solution
-{
-
-private:
-    std::unordered_map<int, int> index;
+class Solution {
 
 public:
-    TreeNode *bulidTree_Pre_Inorder(const std::vector<int> &preorder, const std::vector<int> &inorder, int preorder_left, int preorder_right, int inorder_left, int inorder_right)
-    {
-        if (preorder_left > preorder_right)
-            return nullptr;
+	TreeNode* buildTree_pre_inorder(vector<int>& preorder, vector<int>& inorder) {
+		if (preorder.size() == 0 || inorder.size() == 0 || preorder.size() != inorder.size())return nullptr;
+		for (int i = 0; i < inorder.size(); ++i) {
+			index[inorder[i]] = i;
+		}
+		return conStructTree_pre_inorder(preorder, inorder, 0, preorder.size() - 1, 0, inorder.size() - 1);
+	}
 
-        //前序遍历第一个节点就是根节点
-        int preorder_root = preorder_left;
+	TreeNode* conStructTree_pre_inorder(vector<int>& preorder, vector<int>& inorder, int preorder_left, int preorder_right, int inorder_left, int inorder_right) {
+		//判空操作
+		if (preorder_left > preorder_right)return nullptr;
+		//获取头节点
+		int preorder_root = preorder_left;
+		//在中序遍历中找头节点
+		int inorder_root = index[preorder[preorder_root]];
 
-        //在中序遍历定位根节点
+		//构造头节点
+		TreeNode* root = new TreeNode(preorder[inorder_root]);
 
-        int inorder_root = index[preorder[preorder_root]];
+		//获取左子树的数量
+		int size_subTree = inorder_root - inorder_left;
+		//递归构造左节点
 
-        //先把根节点建立起来
-        TreeNode *root = new TreeNode(preorder[preorder_root]);
+		root->left = conStructTree_pre_inorder(preorder, inorder, preorder_left + 1, preorder_left + size_subTree, inorder_left, inorder_root - 1);
 
-        //得到左子树的节点数目
-        int size_left_subTree = inorder_root - inorder_left;
 
-        //递归构造左子树
-        root->left = bulidTree_Pre_Inorder(preorder, inorder, preorder_left + 1, preorder_left + size_left_subTree, inorder_left, inorder_root - 1);
+		root->right = conStructTree_pre_inorder(preorder, inorder, preorder_left + size_subTree + 1, preorder_right, inorder_root + 1, inorder_right);
+		//
 
-        //递归构造右子树
-        root->right = bulidTree_Pre_Inorder(preorder, inorder, preorder_left + size_left_subTree + 1, preorder_right, inorder_root + 1, inorder_right);
+		return root;
 
-        return root;
-    }
-    TreeNode *bulidTree(std::vector<int> &preorder, std::vector<int> &inorder)
-    {
-        int n = preorder.size();
-        //构建哈希映射
-        for (int i = 0; i < n; i++)
-        {
-            index[inorder[i]] = i;
-        }
-        return bulidTree_Pre_Inorder(preorder, inorder, 0, n - 1, 0, n - 1);
-    }
+	}
 
-    TreeNode *testBuid(std::vector<int> &preorder, std::vector<int> &inorder)
-    {
-        int n = preorder.size();
-        for (int i = 0; i < n; ++i)
-        {
-            index[inorder[i]] = i;
-        }
-        return bulidTree_Pre_Inorder_test(preorder, inorder, 0, n - 1, 0, n - 1);
-    }
+	TreeNode* buildTree_post_inorder(vector<int>& postorder, vector<int>& inorder) {
+		if (postorder.size() == 0 || inorder.size() == 0 || postorder.size() != inorder.size())return nullptr;
+		for (int i = 0; i < inorder.size(); ++i) {
+			index[inorder[i]] = i;
+		}
+		return conStructTree_post_inorder(postorder, inorder, 0, postorder.size() - 1, 0, inorder.size() - 1);
+	}
 
-    TreeNode *bulidTree_Pre_Inorder_test(const std::vector<int> &preorder, const std::vector<int> &inorder, int preorder_left, int preorder_right, int inorder_left, int inorder_right)
-    {
-        if (preorder_left > preorder_right)
-            return nullptr;
+	TreeNode* conStructTree_post_inorder(vector<int>& postorder, vector<int>& inorder, int postorder_left, int postorder_right, int inorder_left, int inorder_right) {
+		if (postorder_left > postorder_right)return nullptr;
 
-        //前序遍历第一个节点就是根节点
-        int preorder_root=preorder_left;
+		//获取头节点
+		int postorder_root = postorder_right;
+		//根据头节点找到中序遍历对应的头节点
+		int inorder_root = index[postorder[postorder_root]];
 
-        //在中序遍历定位根节点
+		//建立头节点
+		TreeNode* root = new TreeNode(postorder[postorder_root]);
 
-        int inorder_root=index[preorder[preorder_root]];
+		//获取右子树的数量
+		int size_subTree = inorder_right- inorder_root;
+		//构造右子树
+		root->right = conStructTree_post_inorder(postorder, inorder, postorder_right-size_subTree, postorder_right-1, inorder_root + 1, inorder_right);
 
-        //先把根节点建立起来
+		//构造左子树
+		root->left = conStructTree_post_inorder(postorder, inorder, postorder_left, postorder_right- size_subTree-1, inorder_left, inorder_root - 1);
 
-        TreeNode *root=new TreeNode(preorder[preorder_root]);
+		return root;
+	}
+private:
+	unordered_map<int, int>index;
 
-        //得到左子树的节点数目
-        int size_left_subTree=inorder_root -inorder_left;
-
-        //递归构造左子树
-        root->left=bulidTree_Pre_Inorder_test(preorder,inorder,preorder_left+1,preorder_left+size_left_subTree,inorder_left,inorder_root-1);
-
-        //递归构造右子树
-        root->right=bulidTree_Pre_Inorder_test(preorder,inorder,preorder_left+size_left_subTree+1,preorder_right,inorder_root+1,inorder_right);
-    }
 };
+int main() {
+	vector<int>preoreder{ 3,9,20,15,7 };
+	vector<int>inorder{ 9,3,15,20,7 };
+	vector<int>postorder{ 9,15,7,20,3 };
+	Solution solution;
+	TreeNode* res = solution.buildTree_pre_inorder(preoreder, inorder);
+	TreeNode* newRes = solution.buildTree_post_inorder(postorder, inorder);
+	cout << newRes->val;
+}
