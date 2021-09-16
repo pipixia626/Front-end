@@ -15,6 +15,7 @@ public:
     void backtrack(vector<int>&nums,int start){
         res.push_back(path);
         for(int i=start;i<nums.size();++i){
+             //去重
             if(i>start&&nums[i]==nums[i-1])
             continue;
             path.push_back(nums[i]);
