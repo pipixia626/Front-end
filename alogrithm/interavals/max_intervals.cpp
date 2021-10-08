@@ -58,4 +58,6 @@ int main()
     {
         cin >> v[i].start >> v[i].end;
     }
+
+    return 0;
 }
