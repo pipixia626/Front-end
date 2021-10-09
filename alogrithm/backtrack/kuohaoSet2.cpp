@@ -39,7 +39,7 @@ private:
 int main() {
 
     Solution solution;
-    solution.findAllSet(2);
+    solution.findAllSet(4);
     solution.display();
 
     return 0;
