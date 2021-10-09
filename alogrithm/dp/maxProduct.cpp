@@ -2,6 +2,7 @@
 #include<vector>
 #include<algorithm>
 using namespace std;
+//最大连续子数组的乘积
 class Solution {
 public:
     int maxProduct(vector<int>& nums) {
