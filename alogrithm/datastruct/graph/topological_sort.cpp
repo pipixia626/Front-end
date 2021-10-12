@@ -66,5 +66,5 @@ bool Graph::topological_sort()
     if (count < V)
         return false;
     else
-        return count;
+        return true;
 }
