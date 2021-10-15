@@ -16,7 +16,7 @@ int main() {
 		cin >> weight[i] >> value[i];
 	}
 	vector<vector<int>>dp(N + 1, vector<int>(V + 1, 0));
-
+    vector<int>dp_update(V+1);
 	for (int i = 1; i <= N; ++i) {
 		for (int j =0 ; j <= V; ++j) {
 			if (j < weight[i]) {
@@ -40,6 +40,14 @@ int main() {
 		cout << record[i] << endl;
 	}
 	cout << dp[N][V] << endl;
+
+
+	for(int i=1;i<=N;++i){
+		for(int j=V;j>=weight[i];j--){
+			dp_update[j]=max(dp_update[j], dp_update[j-weight[i]]+value[i]);
+		}
+	}
+	cout<<dp_update[V]<<endl;
 	return 0;
 
 }
